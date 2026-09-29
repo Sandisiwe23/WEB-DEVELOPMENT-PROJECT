@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>HOME FOR HOPE | Admin</title>
+<style>
+
+  :root {
+
+    --green: #1d4ed8;
+
+    --green-dark: #1e3a8a;
+
+    --orange: #f58a1f;
+
+    --text: #1f2937;
+
+    --text-light: #6b7280;
+
+    --bg: #f9fafb;
+
+    --card: #ffffff;
+
+    --border: #e5e7eb;
+
+    --danger: #b91c1c;
+
+    --radius: 8px;
+
+    --font: "Segoe UI", Arial, sans-serif;
+
+  }
+
+  * { box-sizing: border-box; }
+
+  body { margin: 0; font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.5; }
+
+  h1, h2, h3 { margin: 0 0 .5rem; }
+
+  button { font-family: inherit; font-size: 1rem; cursor: pointer; }
+
+  input, textarea { width: 100%; padding: .6rem .75rem; border: 1px solid var(--border); border-radius: var(--radius); font: inherit; }
+
+  input:focus, textarea:focus { outline: 2px solid var(--green); outline-offset: 1px; }
+
+  label { display: block; font-weight: 600; margin-bottom: .3rem; }
+
+  .hidden { display: none !important; }
+ 
+  .btn { border: 0; border-radius: var(--radius); padding: .55rem 1.1rem; font-weight: 600; background: var(--green); color: #fff; }
+
+  .btn:hover { background: var(--green-dark); }
+
+  .btn--ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+
+  .btn--ghost:hover { background: var(--bg); }
+
+  .btn--danger { background: var(--danger); }
+
+  .btn--danger:hover { background: #991b1b; }
+
+  .btn--sm { padding: .3rem .7rem; font-size: .875rem; }
+ 
+  /* Login */
+
+  .login { min-height: 100vh; display: grid; place-items: center; padding: 1rem; }
+
+  .login__box { background: var(--card); padding: 2rem; border-radius: var(--radius); width: 100%; max-width: 360px; border-top: 4px solid var(--orange); box-shadow: 0 4px 16px rgba(0,0,0,.08); text-align: center; }
+
+  .login__logo { width: 180px; height: auto; margin: 0 auto 1rem; }
+
+  .login__error { color: var(--danger); font-size: .9rem; min-height: 1.3rem; margin: .5rem 0; }
+ 
+  /* Layout */
+
+  .topbar { background: #fff; color: var(--text); padding: .5rem 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border); }
+
+  .topbar__brand { display: flex; align-items: center; gap: .75rem; color: var(--text); }
+
+  .topbar__logo { width: 150px; height: auto; }
+
+  .topbar strong { font-size: 1rem; color: var(--green-dark); }
+
+  .tabs { display: flex; gap: .5rem; padding: 1rem 1.25rem 0; max-width: 1000px; margin: 0 auto; flex-wrap: wrap; }
+
+  .tab { background: transparent; border: 0; padding: .6rem 1rem; border-bottom: 3px solid transparent; font-weight: 600; color: var(--text-light); }
+
+  .tab.is-active { color: var(--green-dark); border-bottom-color: var(--orange); }
+
+  .topbar__actions { display: flex; align-items: center; gap: .75rem; }
+
+  .topbar__actions a { color: var(--green-dark); font-weight: 600; }
+
+  .panel { max-width: 1000px; margin: 0 auto; padding: 1.25rem; }
+ 
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
+
+  .stat { background: var(--card); border-radius: var(--radius); padding: 1rem; border-left: 4px solid var(--green); }
+
+  .stat span { display: block; font-size: 1.8rem; font-weight: 700; }
+ 
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: .75rem; }
+
+  .card.is-unread { border-left: 4px solid var(--orange); }
+
+  .card__head { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+
+  .card__meta { color: var(--text-light); font-size: .875rem; }
+
+  .card__actions { display: flex; gap: .4rem; margin-top: .6rem; flex-wrap: wrap; }
+
+  .card p { white-space: pre-wrap; margin: .5rem 0 0; }
+
+  .empty { text-align: center; color: var(--text-light); padding: 2rem; }
+ 
+  .form-row { display: grid; gap: 1rem; grid-template-columns: 2fr 1fr; }
+
+  @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+  .form-group { margin-bottom: 1rem; }
+
+  .toolbar { display: flex; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+
+  .stats--wide { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+
+  .table-wrap { overflow-x: auto; }
+
+  table { width: 100%; border-collapse: collapse; min-width: 560px; }
+
+  th, td { text-align: left; padding: .75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+
+  th { color: var(--text-light); font-size: .85rem; }
+
+  .notice { margin-bottom: 1rem; padding: .75rem 1rem; border-left: 4px solid var(--orange); background: #fff7ed; }
+</style>
+</head>
+<body>
+ 
+<!-- ============ LOGIN ============ -->
+<div id="login" class="login">
+<form class="login__box" id="login-form">
+<img class="login__logo" src="logo.png" alt="Home for Hope logo" />
+<h1>Admin Login</h1>
+<p style="color:var(--text-light);margin-top:0">HOME FOR HOPE SOUP KITCHEN AND DAY CARE</p>
+<label for="password">Password</label>
+<input type="password" id="password" autocomplete="current-password" required />
+<p class="login__error" id="login-error" role="alert"></p>
+<button class="btn" type="submit" style="width:100%">Log in</button>
+</form>
+</div>
+ 
+<!-- ============ DASHBOARD ============ -->
+<div id="dashboard" class="hidden">
+<header class="topbar">
+<div class="topbar__brand">
+<img class="topbar__logo" src="logo.png" alt="Home for Hope logo" />
+<strong>Admin dashboard</strong>
+</div>
+<div class="topbar__actions">
+<a href="project.html" target="_blank">View site</a>
+<button class="btn btn--ghost btn--sm" id="logout">Log out</button>
+</div>
+</header>
+ 
+  <nav class="tabs" aria-label="Admin sections">
+<button class="tab is-active" data-tab="overview">Overview</button>
+<button class="tab" data-tab="messages">Messages <span id="unread-badge"></span></button>
+<button class="tab" data-tab="services">Services</button>
+<button class="tab" data-tab="donations">Donations</button>
+<button class="tab" data-tab="content">Site Content</button>
+<button class="tab" data-tab="settings">Settings</button>
+</nav>
+ 
+  <!-- Overview -->
+<section class="panel" id="tab-overview">
+<h2>Overview</h2>
+<div class="stats stats--wide">
+<div class="stat"><span id="stat-total">0</span>Total messages</div>
+<div class="stat" style="border-color:var(--orange)"><span id="stat-unread">0</span>Unread messages</div>
+<div class="stat"><span id="stat-services">0</span>Services</div>
+<div class="stat" style="border-color:#2563eb"><span id="stat-donations">0</span>Donations</div>
+<div class="stat" style="border-color:#7c3aed"><span id="stat-children">0</span>Day-care enquiries</div>
+</div>
+<div class="card">
+<h3>Admin responsibilities</h3>
+<p>Use this dashboard to review enquiries, update the services shown to visitors, record donations, and keep the public contact details current.</p>
+</div>
+</section>
+ 
+  <!-- Messages -->
+<section class="panel hidden" id="tab-messages">
+<h2>Contact messages</h2>
+<div class="toolbar">
+<button class="btn btn--ghost btn--sm" id="export-csv">Export CSV</button>
+<button class="btn btn--ghost btn--sm" id="mark-all">Mark all as read</button>
+<button class="btn btn--danger btn--sm" id="clear-all">Delete all</button>
+</div>
+<div id="messages-list"></div>
+</section>
+ 
+  <!-- Services -->
+<section class="panel hidden" id="tab-services">
+<h2>Services</h2>
+ 
+    <form class="card" id="service-form">
+<input type="hidden" id="service-id" />
+<div class="form-row">
+<div class="form-group">
+<label for="service-title">Title</label>
+<input type="text" id="service-title" required />
+</div>
+<div class="form-group">
+<label for="service-price">Price (optional)</label>
+<input type="text" id="service-price" placeholder="e.g. R45" />
+</div>
+</div>
+<div class="form-group">
+<label for="service-desc">Description</label>
+<textarea id="service-desc" rows="3" required></textarea>
+</div>
+<button class="btn" type="submit" id="service-submit">Add service</button>
+<button class="btn btn--ghost hidden" type="button" id="service-cancel">Cancel edit</button>
+</form>
+ 
+    <div id="services-list"></div>
+</section>
+
+  <!-- Donations -->
+<section class="panel hidden" id="tab-donations">
+<h2>Donations</h2>
+<div class="notice">Record money, food, and clothing donations here for your own administration. This static page does not process payments.</div>
+<div class="grid">
+<div class="card"><h3>Money</h3><p>Record cash or electronic donations and the amount received.</p></div>
+<div class="card"><h3>Food</h3><p>Record food items, quantities, and useful expiry information.</p></div>
+<div class="card"><h3>Clothes</h3><p>Record clothing items, sizes, and quantities received.</p></div>
+</div>
+<form class="card" id="donation-form">
+<div class="form-row">
+<div class="form-group"><label for="donor-name">Donor name</label><input id="donor-name" required /></div>
+<div class="form-group"><label for="donation-amount">Amount / quantity</label><input id="donation-amount" placeholder="e.g. R500 or 10 items" required /></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label for="donation-type">Donation type</label><select id="donation-type" required><option value="">Choose a type</option><option value="Money">Money</option><option value="Food">Food</option><option value="Clothes">Clothes</option></select></div>
+<div class="form-group"><label for="donation-date">Date</label><input type="date" id="donation-date" required /></div>
+</div>
+<div class="form-group"><label for="donation-details">Details</label><textarea id="donation-details" rows="3" placeholder="Describe the food or clothing items, sizes, quantities, or any other useful notes." required></textarea></div>
+<button class="btn" type="submit">Add donation</button>
+</form>
+<div id="donations-list"></div>
+</section>
+
+  <!-- Site content -->
+<section class="panel hidden" id="tab-content">
+<h2>Site content</h2>
+<form class="card" id="content-form">
+<div class="form-group"><label for="content-title">Organisation name</label><input id="content-title" required /></div>
+<div class="form-group"><label for="content-intro">Homepage introduction</label><textarea id="content-intro" rows="3" required></textarea></div>
+<div class="form-row">
+<div class="form-group"><label for="content-email">Public email</label><input type="email" id="content-email" required /></div>
+<div class="form-group"><label for="content-phone">Public phone</label><input id="content-phone" required /></div>
+</div>
+<button class="btn" type="submit">Save site details</button>
+<p id="content-saved" class="card__meta" role="status"></p>
+</form>
+</section>
+
+  <!-- Settings -->
+<section class="panel hidden" id="tab-settings">
+<h2>Settings</h2>
+<div class="card">
+<h3>Admin access</h3>
+<p class="card__meta">The current password is stored in this HTML file, so this login is suitable only for a prototype. A real website needs server-side authentication.</p>
+<button class="btn btn--danger" type="button" id="clear-admin-data">Clear saved admin data</button>
+</div>
+</section>
+</div>
+ 
+<script>
+
+  /* ==========================================================
+
+     SETTINGS — CHANGE THE PASSWORD BELOW BEFORE USING
+
+     NOTE: this login is client-side only. It keeps casual
+
+     visitors out but is NOT real security.
+
+     ========================================================== */
+
+  const ADMIN_PASSWORD = "ONIKWA2026!";
+ 
+  const KEY_MESSAGES = "sk_messages";
+
+  const KEY_SERVICES = "sk_services";
+
+  const KEY_DONATIONS = "sk_donations";
+
+  const KEY_CONTENT = "sk_content";
+
+  const KEY_SESSION  = "sk_admin_session";
+ 
+  const $ = (id) => document.getElementById(id);
+ 
+  const load = (key) => {
+
+    try { return JSON.parse(localStorage.getItem(key)) || []; }
+
+    catch { return []; }
+
+  };
+
+  const save = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+ 
+  /* ----- Login ----- */
+
+  function showDashboard() {
+
+    $("login").classList.add("hidden");
+
+    $("dashboard").classList.remove("hidden");
+
+    renderAll();
+
+  }
+ 
+  $("login-form").addEventListener("submit", (e) => {
+
+    e.preventDefault();
+
+    if ($("password").value === ADMIN_PASSWORD) {
+
+      sessionStorage.setItem(KEY_SESSION, "1");
+
+      $("password").value = "";
+
+      $("login-error").textContent = "";
+
+      showDashboard();
+
+    } else {
+
+      $("login-error").textContent = "Incorrect password.";
+
+    }
+
+  });
+ 
+  $("logout").addEventListener("click", () => {
+
+    sessionStorage.removeItem(KEY_SESSION);
+
+    location.reload();
+
+  });
+ 
+  if (sessionStorage.getItem(KEY_SESSION) === "1") showDashboard();
+ 
+  /* ----- Tabs ----- */
+
+  document.querySelectorAll(".tab").forEach((tab) => {
+
+    tab.addEventListener("click", () => {
+
+      document.querySelectorAll(".tab").forEach((t) => t.classList.remove("is-active"));
+
+      tab.classList.add("is-active");
+
+      ["overview", "messages", "services", "donations", "content", "settings"].forEach((name) => {
+
+        $("tab-" + name).classList.toggle("hidden", name !== tab.dataset.tab);
+
+      });
+
+    });
+
+  });
+ 
+  /* ----- Helpers ----- */
+
+  // Build elements with textContent so visitor-submitted text can never run as HTML
+
+  function el(tag, opts = {}, children = []) {
+
+    const node = document.createElement(tag);
+
+    if (opts.class) node.className = opts.class;
+
+    if (opts.text) node.textContent = opts.text;
+
+    if (opts.onclick) node.addEventListener("click", opts.onclick);
+
+    if (opts.type) node.type = opts.type;
+
+    children.forEach((c) => node.appendChild(c));
+
+    return node;
+
+  }
+ 
+  function fmtDate(iso) {
+
+    const d = new Date(iso);
+
+    return isNaN(d) ? "" : d.toLocaleString();
+
+  }
+ 
+  /* ----- Render ----- */
+
+  function renderAll() {
+
+    renderStats();
+
+    renderMessages();
+
+    renderServices();
+
+    renderDonations();
+
+    renderContent();
+
+  }
+ 
+  function renderStats() {
+
+    const msgs = load(KEY_MESSAGES);
+
+    const unread = msgs.filter((m) => !m.read).length;
+
+    $("stat-total").textContent = msgs.length;
+
+    $("stat-unread").textContent = unread;
+
+    $("stat-services").textContent = load(KEY_SERVICES).length;
+
+    $("stat-donations").textContent = load(KEY_DONATIONS).length;
+
+    $("stat-children").textContent = msgs.filter((m) => /day.?care|child|enquir/i.test((m.message || "") + " " + (m.name || ""))).length;
+
+    $("unread-badge").textContent = unread ? "(" + unread + ")" : "";
+
+  }
+ 
+  function renderMessages() {
+
+    const list = $("messages-list");
+
+    list.innerHTML = "";
+
+    const msgs = load(KEY_MESSAGES).sort((a, b) => new Date(b.date) - new Date(a.date));
+ 
+    if (!msgs.length) {
+
+      list.appendChild(el("div", { class: "empty", text: "No messages yet." }));
+
+      return;
+
+    }
+ 
+    msgs.forEach((m) => {
+
+      const head = el("div", { class: "card__head" }, [
+
+        el("strong", { text: m.name }),
+
+        el("span", { class: "card__meta", text: fmtDate(m.date) }),
+
+      ]);
+
+      const email = el("div", { class: "card__meta", text: m.email });
+
+      const body = el("p", { text: m.message });
+ 
+      const actions = el("div", { class: "card__actions" }, [
+
+        el("button", {
+
+          class: "btn btn--ghost btn--sm",
+
+          text: m.read ? "Mark unread" : "Mark read",
+
+          onclick: () => toggleRead(m.id),
+
+        }),
+
+        el("button", {
+
+          class: "btn btn--ghost btn--sm",
+
+          text: "Reply",
+
+          onclick: () => { location.href = "mailto:" + encodeURIComponent(m.email) + "?subject=" + encodeURIComponent("Re: your message to The Soup Kitchen"); },
+
+        }),
+
+        el("button", {
+
+          class: "btn btn--danger btn--sm",
+
+          text: "Delete",
+
+          onclick: () => deleteMessage(m.id),
+
+        }),
+
+      ]);
+ 
+      list.appendChild(el("div", { class: "card" + (m.read ? "" : " is-unread") }, [head, email, body, actions]));
+
+    });
+
+  }
+ 
+  function toggleRead(id) {
+
+    const msgs = load(KEY_MESSAGES).map((m) => (m.id === id ? { ...m, read: !m.read } : m));
+
+    save(KEY_MESSAGES, msgs);
+
+    renderAll();
+
+  }
+ 
+  function deleteMessage(id) {
+
+    if (!confirm("Delete this message?")) return;
+
+    save(KEY_MESSAGES, load(KEY_MESSAGES).filter((m) => m.id !== id));
+
+    renderAll();
+
+  }
+ 
+  $("mark-all").addEventListener("click", () => {
+
+    save(KEY_MESSAGES, load(KEY_MESSAGES).map((m) => ({ ...m, read: true })));
+
+    renderAll();
+
+  });
+ 
+  $("clear-all").addEventListener("click", () => {
+
+    if (!confirm("Delete ALL messages? This cannot be undone.")) return;
+
+    save(KEY_MESSAGES, []);
+
+    renderAll();
+
+  });
+ 
+  $("export-csv").addEventListener("click", () => {
+
+    const msgs = load(KEY_MESSAGES);
+
+    if (!msgs.length) return alert("No messages to export.");
+
+    const esc = (v) => '"' + String(v).replace(/"/g, '""') + '"';
+
+    const rows = [["Date", "Name", "Email", "Message", "Read"]]
+
+      .concat(msgs.map((m) => [m.date, m.name, m.email, m.message, m.read ? "yes" : "no"]));
+
+    const csv = rows.map((r) => r.map(esc).join(",")).join("\n");
+
+    const a = document.createElement("a");
+
+    a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+
+    a.download = "messages.csv";
+
+    a.click();
+
+    URL.revokeObjectURL(a.href);
+
+  });
+ 
+  /* ----- Services ----- */
+
+  function renderServices() {
+
+    const list = $("services-list");
+
+    list.innerHTML = "";
+
+    const items = load(KEY_SERVICES);
+ 
+    if (!items.length) {
+
+      list.appendChild(el("div", { class: "empty", text: "No services added yet." }));
+
+      return;
+
+    }
+ 
+    items.forEach((s) => {
+
+      const head = el("div", { class: "card__head" }, [
+
+        el("strong", { text: s.title }),
+
+        el("span", { class: "card__meta", text: s.price || "" }),
+
+      ]);
+
+      const body = el("p", { text: s.description });
+
+      const actions = el("div", { class: "card__actions" }, [
+
+        el("button", { class: "btn btn--ghost btn--sm", text: "Edit", onclick: () => editService(s.id) }),
+
+        el("button", { class: "btn btn--danger btn--sm", text: "Delete", onclick: () => deleteService(s.id) }),
+
+      ]);
+
+      list.appendChild(el("div", { class: "card" }, [head, body, actions]));
+
+    });
+
+  }
+ 
+  $("service-form").addEventListener("submit", (e) => {
+
+    e.preventDefault();
+
+    const items = load(KEY_SERVICES);
+
+    const id = $("service-id").value;
+
+    const entry = {
+
+      id: id ? Number(id) : Date.now(),
+
+      title: $("service-title").value.trim(),
+
+      price: $("service-price").value.trim(),
+
+      description: $("service-desc").value.trim(),
+
+    };
+
+    if (id) {
+
+      save(KEY_SERVICES, items.map((s) => (s.id === entry.id ? entry : s)));
+
+    } else {
+
+      items.push(entry);
+
+      save(KEY_SERVICES, items);
+
+    }
+
+    resetServiceForm();
+
+    renderAll();
+
+  });
+ 
+  function editService(id) {
+
+    const s = load(KEY_SERVICES).find((x) => x.id === id);
+
+    if (!s) return;
+
+    $("service-id").value = s.id;
+
+    $("service-title").value = s.title;
+
+    $("service-price").value = s.price || "";
+
+    $("service-desc").value = s.description;
+
+    $("service-submit").textContent = "Save changes";
+
+    $("service-cancel").classList.remove("hidden");
+
+    $("service-title").focus();
+
+  }
+ 
+  function deleteService(id) {
+
+    if (!confirm("Delete this service?")) return;
+
+    save(KEY_SERVICES, load(KEY_SERVICES).filter((s) => s.id !== id));
+
+    renderAll();
+
+  }
+ 
+  function resetServiceForm() {
+
+    $("service-form").reset();
+
+    $("service-id").value = "";
+
+    $("service-submit").textContent = "Add service";
+
+    $("service-cancel").classList.add("hidden");
+
+  }
+
+  $("service-cancel").addEventListener("click", resetServiceForm);
+
+  /* ----- Donations ----- */
+
+  function renderDonations() {
+    const list = $("donations-list");
+    list.innerHTML = "";
+    const donations = load(KEY_DONATIONS).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    if (!donations.length) {
+      list.appendChild(el("div", { class: "empty", text: "No donations recorded yet." }));
+      return;
+    }
+
+    const table = document.createElement("table");
+    table.innerHTML = "<thead><tr><th>Donor</th><th>Amount / quantity</th><th>Type</th><th>Details</th><th>Date</th><th>Action</th></tr></thead>";
+    const body = document.createElement("tbody");
+    donations.forEach((donation) => {
+      const row = document.createElement("tr");
+      [donation.name, donation.amount, donation.type, donation.details || "", donation.date].forEach((value) => {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
+      });
+      const actionCell = document.createElement("td");
+      actionCell.appendChild(el("button", { class: "btn btn--danger btn--sm", text: "Delete", onclick: () => deleteDonation(donation.id) }));
+      row.appendChild(actionCell);
+      body.appendChild(row);
+    });
+    table.appendChild(body);
+    const wrapper = el("div", { class: "card table-wrap" });
+    wrapper.appendChild(table);
+    list.appendChild(wrapper);
+  }
+
+  $("donation-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const donations = load(KEY_DONATIONS);
+    donations.push({ id: Date.now(), name: $("donor-name").value.trim(), amount: $("donation-amount").value.trim(), type: $("donation-type").value, details: $("donation-details").value.trim(), date: $("donation-date").value });
+    save(KEY_DONATIONS, donations);
+    e.target.reset();
+    renderAll();
+  });
+
+  function deleteDonation(id) {
+    if (!confirm("Delete this donation record?")) return;
+    save(KEY_DONATIONS, load(KEY_DONATIONS).filter((donation) => donation.id !== id));
+    renderAll();
+  }
+
+  /* ----- Site content ----- */
+
+  function renderContent() {
+    const content = load(KEY_CONTENT);
+    $("content-title").value = content.title || "HOME FOR HOPE SOUP KITCHEN AND DAY CARE";
+    $("content-intro").value = content.intro || "We care for your children and feed our community, offering a warm meal and a safe space for all.";
+    $("content-email").value = content.email || "hello@example.com";
+    $("content-phone").value = content.phone || "+27 00 000 0000";
+  }
+
+  $("content-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    save(KEY_CONTENT, { title: $("content-title").value.trim(), intro: $("content-intro").value.trim(), email: $("content-email").value.trim(), phone: $("content-phone").value.trim() });
+    $("content-saved").textContent = "Site details saved in this browser.";
+  });
+
+  $("clear-admin-data").addEventListener("click", () => {
+    if (!confirm("Clear messages, services, donations, and site details?")) return;
+    [KEY_MESSAGES, KEY_SERVICES, KEY_DONATIONS, KEY_CONTENT].forEach((key) => localStorage.removeItem(key));
+    renderAll();
+  });
+</script>
+ 
+</body>
+</html>
+ 
